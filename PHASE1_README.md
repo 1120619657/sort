@@ -1,27 +1,28 @@
-# SORT 阶段一测试说明（Checkpoint 2）
+# SORT 阶段一测试说明（Checkpoint 3）
 
 ## 当前范围
 
-在 Checkpoint 1 基础上完成第一批测试：`linear_assignment`、`iou_batch`、`associate_detections_to_trackers`，共 19 条自动化用例。
+在前两个缺陷修复基础上，新增坐标转换、`Sort.update` 基本跨帧场景以及 demo 检测文件读取测试。累计 32 条自动化用例，已经达到课程对阶段一测试用例数量的基本要求。
 
-## 本次修复
+新增重点：
+- `convert_bbox_to_z` / `convert_x_to_bbox` 的代表性矩形与往返转换。
+- `Sort.update` 的单目标连续运动、多目标、新目标进入、目标离开。
+- demo 最小合法输入：只有一条 detection 的 MOT 格式 `det.txt`。
 
-- P1-BUG-001：空 tracker 时 `unmatched_trackers` 从二维空框数组统一为一维空索引数组。
-- P1-BUG-002：空代价矩阵时 `linear_assignment` 统一返回 `(0, 2)` 整数数组。
-
-两项均采用“失败用例 → 最小修复 → 目标回归 → 第一批全量回归”的方式验证。
-
-## 安装与运行
+## 运行
 
 ```bash
-python -m pip install -r requirements.txt
-python -m pip install pytest
 pytest tests_phase1 -v
 ```
 
-单独验证两个回归用例：
+也可单独运行新增模块：
 
 ```bash
-pytest tests_phase1/test_linear_assignment.py::test_linear_assignment_empty_matrix_has_pair_shape -v
-pytest tests_phase1/test_association.py::test_association_no_detections_and_no_trackers -v
+pytest tests_phase1/test_bbox_conversion.py -v
+pytest tests_phase1/test_sort_update.py -v
+pytest tests_phase1/test_demo_input.py -v
 ```
+
+## 当前预期
+
+该 checkpoint 故意保留原始 demo 文件读取逻辑，不包含 P1-BUG-003 的修复。因此单行 detection 文件测试应稳定失败，其余阶段一用例应通过。这里用于保留“新增测试先暴露缺陷”的证据。

@@ -1,23 +1,20 @@
-# 阶段一缺陷记录（Checkpoint 2）
+# 阶段一缺陷记录（Checkpoint 3）
 
-## P1-BUG-001 空 tracker 分支返回错误形状
+## 已关闭缺陷
 
-- 触发：`detections.shape=(0,5)`，`trackers.shape=(0,5)`。
-- 预期：`unmatched_trackers` 是一维索引数组，空值 shape 为 `(0,)`。
-- 基线实际：shape 为 `(0,5)`。
-- 根因：早返回把 tracker 框的二维列结构误用于索引集合。
-- 最小修复：改为 `np.empty((0,), dtype=int)`。
-- 回归：目标测试及第一批全量测试通过。
+### P1-BUG-001 空 tracker 分支返回错误形状
+已在 Checkpoint 2 最小修复并回归通过。
 
-## P1-BUG-002 空代价矩阵返回格式不稳定
+### P1-BUG-002 空代价矩阵返回格式不稳定
+已在 Checkpoint 2 最小修复并回归通过。
 
-- 触发：`linear_assignment(np.empty((0,0)))`。
-- 预期：空匹配仍维持 `[row_index, column_index]` 两列结构，即 `(0,2)`。
-- 基线实际：SciPy 回退路径形成 shape `(0,)`。
-- 根因：函数未对空矩阵显式规范返回契约。
-- 最小修复：入口检测 `cost_matrix.size == 0` 并返回 `(0,2)` 整数数组。
-- 回归：目标测试及第一批全量测试通过。
+## 新发现：P1-BUG-003 单行检测文件导致 demo 读取维度异常
 
-## 第一批测试状态
+- 场景：MOT 格式 `det.txt` 仅包含一条合法 detection。
+- 触发数据示例：`1,1,10,20,30,40,0.9,-1,-1,-1`。
+- 合理预期：demo 能处理最小规模合法检测文件并生成输出。
+- 实际：`np.loadtxt` 对单行文件返回一维 ndarray，随后 `seq_dets[:,0]` 使用二维索引导致 `IndexError`。
+- 根因：demo 默认 `np.loadtxt` 始终返回二维检测矩阵，没有统一单行输入维度。
+- 当前状态：已由 `test_demo_accepts_single_detection_row` 稳定复现，尚未修复。
 
-两项已确认软件缺陷已完成闭环。其余测试用于回归正常输入、IoU 典型边界以及 detection-tracker 的常见匹配组合。
+本 checkpoint 的目的就是保存 BUG-003 修复前状态，便于后续形成清晰的测试发现过程。
