@@ -1,28 +1,40 @@
-# SORT 阶段一测试说明（Checkpoint 3）
+# SORT 阶段一测试说明（Checkpoint 4 / 最终状态）
 
-## 当前范围
+## 最终范围
 
-在前两个缺陷修复基础上，新增坐标转换、`Sort.update` 基本跨帧场景以及 demo 检测文件读取测试。累计 32 条自动化用例，已经达到课程对阶段一测试用例数量的基本要求。
+阶段一累计 41 条自动化用例，覆盖：
+- `linear_assignment`
+- `iou_batch`
+- `convert_bbox_to_z`
+- `convert_x_to_bbox`
+- `associate_detections_to_trackers`
+- `KalmanBoxTracker`
+- `Sort.update`
+- demo 单行 detection 文件读取路径
 
-新增重点：
-- `convert_bbox_to_z` / `convert_x_to_bbox` 的代表性矩形与往返转换。
-- `Sort.update` 的单目标连续运动、多目标、新目标进入、目标离开。
-- demo 最小合法输入：只有一条 detection 的 MOT 格式 `det.txt`。
+测试设计采用等价类、边界值和场景法。NaN/Inf、Hypothesis、随机/模糊测试、系统性质测试和长序列压力仍保留到阶段二。
+
+## 三个已确认缺陷
+
+1. P1-BUG-001：空 tracker 分支返回二维空框而非一维索引。
+2. P1-BUG-002：空代价矩阵返回 shape `(0,)` 而非 `(0,2)`。
+3. P1-BUG-003：单行合法 detection 文件被 `np.loadtxt` 读取为一维数组，demo 后续二维索引崩溃。
 
 ## 运行
 
 ```bash
+python -m pip install -r requirements.txt
+python -m pip install pytest coverage
 pytest tests_phase1 -v
+coverage erase
+coverage run -m pytest tests_phase1
+coverage report -m --include='sort.py'
 ```
 
-也可单独运行新增模块：
+## 缺陷回归
 
 ```bash
-pytest tests_phase1/test_bbox_conversion.py -v
-pytest tests_phase1/test_sort_update.py -v
-pytest tests_phase1/test_demo_input.py -v
+pytest tests_phase1/test_linear_assignment.py::test_linear_assignment_empty_matrix_has_pair_shape -v
+pytest tests_phase1/test_association.py::test_association_no_detections_and_no_trackers -v
+pytest tests_phase1/test_demo_input.py::test_demo_accepts_single_detection_row -v
 ```
-
-## 当前预期
-
-该 checkpoint 故意保留原始 demo 文件读取逻辑，不包含 P1-BUG-003 的修复。因此单行 detection 文件测试应稳定失败，其余阶段一用例应通过。这里用于保留“新增测试先暴露缺陷”的证据。
