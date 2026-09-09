@@ -1,32 +1,27 @@
-# SORT 阶段一测试说明（Checkpoint 1）
+# SORT 阶段一测试说明（Checkpoint 2）
 
 ## 当前范围
 
-第一批测试覆盖 `linear_assignment`、`iou_batch` 和 `associate_detections_to_trackers` 的基础功能、空输入边界和典型匹配行为。当前使用 SORT 原始基线代码，不包含任何缺陷修复。
+在 Checkpoint 1 基础上完成第一批测试：`linear_assignment`、`iou_batch`、`associate_detections_to_trackers`，共 19 条自动化用例。
 
-## 测试方法
+## 本次修复
 
-- 等价类：单元素/普通矩阵、重合/不重合矩形、正常 detection 输入。
-- 边界值：空代价矩阵、空 tracker、矩形边界接触。
+- P1-BUG-001：空 tracker 时 `unmatched_trackers` 从二维空框数组统一为一维空索引数组。
+- P1-BUG-002：空代价矩阵时 `linear_assignment` 统一返回 `(0, 2)` 整数数组。
 
-## 运行环境
+两项均采用“失败用例 → 最小修复 → 目标回归 → 第一批全量回归”的方式验证。
 
-建议 Python 3.9+，安装 `requirements.txt` 以及 `pytest`。
+## 安装与运行
 
 ```bash
 python -m pip install -r requirements.txt
 python -m pip install pytest
-```
-
-## 运行第一批测试
-
-```bash
-pytest tests_phase1/test_linear_assignment.py -v
-pytest tests_phase1/test_iou.py -v
-pytest tests_phase1/test_association.py -v
 pytest tests_phase1 -v
 ```
 
-## 当前预期
+单独验证两个回归用例：
 
-原始基线代码应暴露两个边界返回契约问题：空代价矩阵的分配结果形状，以及空 tracker 分支的未匹配轨迹索引形状。此 checkpoint 只负责复现，不修复。
+```bash
+pytest tests_phase1/test_linear_assignment.py::test_linear_assignment_empty_matrix_has_pair_shape -v
+pytest tests_phase1/test_association.py::test_association_no_detections_and_no_trackers -v
+```

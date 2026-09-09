@@ -34,6 +34,8 @@ np.random.seed(0)
 
 
 def linear_assignment(cost_matrix):
+  if cost_matrix.size == 0:
+    return np.empty((0, 2), dtype=int)
   try:
     import lap
     _, x, y = lap.lapjv(cost_matrix, extend_cost=True)
@@ -158,7 +160,7 @@ def associate_detections_to_trackers(detections,trackers,iou_threshold = 0.3):
   Returns 3 lists of matches, unmatched_detections and unmatched_trackers
   """
   if(len(trackers)==0):
-    return np.empty((0,2),dtype=int), np.arange(len(detections)), np.empty((0,5),dtype=int)
+    return np.empty((0,2),dtype=int), np.arange(len(detections)), np.empty((0,),dtype=int)
 
   iou_matrix = iou_batch(detections, trackers)
 
