@@ -8,12 +8,12 @@
 | SORT-P2-AI-004 | 1 | 异常/数值 | Inf 坐标应显式拒绝或保持有限结果 | 已实现 |
 | SORT-P2-AI-005 | 1 | 异常/数值 | 极大有限坐标往返转换 | 已实现 |
 | SORT-P2-AI-006 | 1 | 异常/数值 | 负坐标 IoU 仍位于 [0,1] | 已实现 |
-| SORT-P2-AI-007 | 2 | 参数/状态 | max_age=2 的精确删除边界 | 待后续 checkpoint |
-| SORT-P2-AI-008 | 2 | 参数/状态 | 最后允许时刻重现保持 ID | 待后续 checkpoint |
-| SORT-P2-AI-009 | 2 | 参数/状态 | 超出 max_age 后重现获得新 ID | 待后续 checkpoint |
-| SORT-P2-AI-010 | 2 | 参数/状态 | IoU 恰等于 threshold 的系统级关联 | 待后续 checkpoint |
-| SORT-P2-AI-011 | 2 | 参数/状态 | threshold 略高于 IoU 时产生新轨迹 | 待后续 checkpoint |
-| SORT-P2-AI-012 | 2 | 参数/状态 | 漏检后 min_hits 连续命中恢复 | 待后续 checkpoint |
+| SORT-P2-AI-007 | 2 | 参数/状态 | max_age=2 的精确删除边界 | 已实现 |
+| SORT-P2-AI-008 | 2 | 参数/状态 | 最后允许时刻重现保持 ID | 已实现 |
+| SORT-P2-AI-009 | 2 | 参数/状态 | 超出 max_age 后重现获得新 ID | 已实现 |
+| SORT-P2-AI-010 | 2 | 参数/状态 | IoU 恰等于 threshold 的系统级关联 | 已实现 |
+| SORT-P2-AI-011 | 2 | 参数/状态 | threshold 略高于 IoU 时产生新轨迹 | 已实现 |
+| SORT-P2-AI-012 | 2 | 参数/状态 | 漏检后 min_hits 连续命中恢复 | 已实现 |
 | SORT-P2-AI-013 | 3 | 性质 | IoU 对称性 | 待后续 checkpoint |
 | SORT-P2-AI-014 | 3 | 性质 | 合法框自 IoU 恒为 1 | 待后续 checkpoint |
 | SORT-P2-AI-015 | 3 | 性质 | 合法框 IoU 恒在 [0,1] | 待后续 checkpoint |
