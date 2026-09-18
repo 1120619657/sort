@@ -50,6 +50,15 @@ def iou_batch(bb_test, bb_gt):
   """
   From SORT: Computes IOU between two bboxes in the form [x1,y1,x2,y2]
   """
+  bb_test = np.asarray(bb_test, dtype=float)
+  bb_gt = np.asarray(bb_gt, dtype=float)
+  if not np.all(np.isfinite(bb_test)) or not np.all(np.isfinite(bb_gt)):
+    raise ValueError("bounding boxes must contain only finite coordinates")
+  if np.any(bb_test[..., 2] <= bb_test[..., 0]) or np.any(bb_test[..., 3] <= bb_test[..., 1]):
+    raise ValueError("test bounding boxes must have positive width and height")
+  if np.any(bb_gt[..., 2] <= bb_gt[..., 0]) or np.any(bb_gt[..., 3] <= bb_gt[..., 1]):
+    raise ValueError("ground-truth bounding boxes must have positive width and height")
+
   bb_gt = np.expand_dims(bb_gt, 0)
   bb_test = np.expand_dims(bb_test, 1)
   
@@ -71,8 +80,13 @@ def convert_bbox_to_z(bbox):
     [x,y,s,r] where x,y is the centre of the box and s is the scale/area and r is
     the aspect ratio
   """
+  bbox = np.asarray(bbox, dtype=float)
+  if not np.all(np.isfinite(bbox)):
+    raise ValueError("bounding box must contain only finite coordinates")
   w = bbox[2] - bbox[0]
   h = bbox[3] - bbox[1]
+  if w <= 0 or h <= 0:
+    raise ValueError("bounding box must have positive width and height")
   x = bbox[0] + w/2.
   y = bbox[1] + h/2.
   s = w * h    #scale is just area
