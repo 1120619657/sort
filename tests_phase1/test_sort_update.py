@@ -40,3 +40,43 @@ def test_sort_target_leaves_current_output():
     result = tracker.update(EMPTY)
     assert result.shape == (0, 5)
     assert len(tracker.trackers) == 1
+
+
+def test_sort_short_miss_preserves_target_id():
+    tracker = Sort(max_age=2, min_hits=1)
+    first_id = int(tracker.update(_det(0, 0, 10, 10))[0, 4])
+    tracker.update(EMPTY)
+    returned_id = int(tracker.update(_det(1, 0, 11, 10))[0, 4])
+    assert returned_id == first_id
+
+
+def test_sort_consecutive_empty_frames_remove_expired_track():
+    tracker = Sort(max_age=1, min_hits=1)
+    tracker.update(_det(0, 0, 10, 10))
+    tracker.update(EMPTY)
+    assert len(tracker.trackers) == 1
+    tracker.update(EMPTY)
+    assert len(tracker.trackers) == 0
+
+
+def test_sort_max_age_changes_deletion_time():
+    short = Sort(max_age=0, min_hits=1)
+    long = Sort(max_age=2, min_hits=1)
+    short.update(_det(0, 0, 10, 10))
+    long.update(_det(0, 0, 10, 10))
+    short.update(EMPTY)
+    long.update(EMPTY)
+    assert len(short.trackers) == 0
+    assert len(long.trackers) == 1
+
+
+def test_sort_min_hits_delays_output_after_warmup():
+    tracker = Sort(max_age=1, min_hits=3)
+    for _ in range(3):
+        tracker.update(EMPTY)
+    assert tracker.update(_det(0, 0, 10, 10)).shape == (0, 5)
+    assert tracker.update(_det(1, 0, 11, 10)).shape == (0, 5)
+    assert tracker.update(_det(2, 0, 12, 10)).shape == (0, 5)
+    result = tracker.update(_det(3, 0, 13, 10))
+    assert result.shape == (1, 5)
+    assert int(result[0, 4]) == 1
