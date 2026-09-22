@@ -14,11 +14,11 @@
 | SORT-P2-AI-010 | 2 | 参数/状态 | IoU 恰等于 threshold 的系统级关联 | 已实现 |
 | SORT-P2-AI-011 | 2 | 参数/状态 | threshold 略高于 IoU 时产生新轨迹 | 已实现 |
 | SORT-P2-AI-012 | 2 | 参数/状态 | 漏检后 min_hits 连续命中恢复 | 已实现 |
-| SORT-P2-AI-013 | 3 | 性质 | IoU 对称性 | 待后续 checkpoint |
-| SORT-P2-AI-014 | 3 | 性质 | 合法框自 IoU 恒为 1 | 待后续 checkpoint |
-| SORT-P2-AI-015 | 3 | 性质 | 合法框 IoU 恒在 [0,1] | 待后续 checkpoint |
-| SORT-P2-AI-016 | 3 | 性质 | bbox -> z -> bbox 往返一致 | 待后续 checkpoint |
-| SORT-P2-AI-017 | 3 | 性质 | 关联结果保持一对一 | 待后续 checkpoint |
+| SORT-P2-AI-013 | 3 | 性质 | IoU 对称性 | 已实现 |
+| SORT-P2-AI-014 | 3 | 性质 | 合法框自 IoU 恒为 1 | 已实现 |
+| SORT-P2-AI-015 | 3 | 性质 | 合法框 IoU 恒在 [0,1] | 已实现 |
+| SORT-P2-AI-016 | 3 | 性质 | bbox -> z -> bbox 往返一致 | 已实现 |
+| SORT-P2-AI-017 | 3 | 性质 | 关联结果保持一对一 | 已实现 |
 | SORT-P2-AI-018 | 4 | 复杂/长序列 | 单目标 500 帧平滑运动保持 ID | 待后续 checkpoint |
 | SORT-P2-AI-019 | 4 | 复杂/长序列 | 500 帧周期漏检仍保持轨迹 | 待后续 checkpoint |
 | SORT-P2-AI-020 | 4 | 复杂/长序列 | 双目标交叉时输出 ID 不重复且状态有界 | 待后续 checkpoint |
